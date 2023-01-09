@@ -23,12 +23,23 @@ const PlayNumber = props => {
   )
 }
 
+const PlayAgain = props => {
+  return(
+    <div>
+      <button className="game-done">
+        Play Again
+      </button>
+    </div>
+  )
+}
+
 const StarMatch = () => {
   const [stars, setStars] = useState(utils.random(1, 9))
   const [availableNums, setAvailableNums] = useState(utils.range(1, 9));
   const [candidateNums, setCandidateNums] = useState([]);
 
   const candidatesAreWrong = utils.sum(candidateNums) > stars;
+  const gameIsDone = availableNums.length === 0;
 
   const numberStatus = (number) => {
   if(!availableNums.includes(number)){
@@ -41,27 +52,26 @@ const StarMatch = () => {
 }
 
 const onNumberClick = (number, currentStatus) => {
-  if(currentStatus == 'used'){
-    return;
-  }
+    if (currentStatus === 'used') {
+      return;
+    }
 
-  const newCandidateNums = 
-    currentStatus === 'available'
-    ? candidateNums.concat(number)
-    : candidateNums.filter(cn => cn !== number);
+		const newCandidateNums =
+      currentStatus === 'available'
+        ? candidateNums.concat(number)
+        : candidateNums.filter(cn => cn !== number);
 
-  if(utils.sum(newCandidateNums) !== stars){
-    setCandidateNums(newCandidateNums)
-  }else{
-    const newAvailableNums = availableNums.filter(
-      n => !newCandidateNums.includes(n)
-    )
-    setAvailableNums(newAvailableNums)
-    setCandidateNums([])
-    setStars(utils.randomSumIn(availableNums, 9))
-  }
-
-}
+    if (utils.sum(newCandidateNums) !== stars) {
+      setCandidateNums(newCandidateNums);
+    } else {
+      const newAvailableNums = availableNums.filter(
+        n => !newCandidateNums.includes(n)
+      );
+      setStars(utils.randomSumIn(newAvailableNums, 9));
+      setAvailableNums(newAvailableNums);
+      setCandidateNums([]);
+    }
+  };
 
   return (
     <div className="game">
@@ -70,7 +80,11 @@ const onNumberClick = (number, currentStatus) => {
       </div>
       <div className="body">
         <div className="left">
-          <StarsDisplay count={stars}/>
+          {gameIsDone ? (
+            <PlayAgain/>
+          ): (
+            <StarsDisplay count={stars}/>
+          )}
         </div>
         <div className="right">
           {utils.range(1, 9).map(number => 
