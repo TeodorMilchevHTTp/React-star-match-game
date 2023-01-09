@@ -25,7 +25,6 @@ const PlayNumber = props => {
 
 const StarMatch = () => {
   const [stars, setStars] = useState(utils.random(1, 9))
-  //Check numbers if either available or candidate
   const [availableNums, setAvailableNums] = useState(utils.range(1, 9));
   const [candidateNums, setCandidateNums] = useState([]);
 
@@ -42,13 +41,12 @@ const StarMatch = () => {
 }
 
 const onNumberClick = (number, currentStatus) => {
-  //new Status
   if(currentStatus == 'used'){
-    return
+    return;
   }
 
   const newCandidateNums = 
-  currentStatus = 'available'
+    currentStatus === 'available'
     ? candidateNums.concat(number)
     : candidateNums.filter(cn => cn !== number);
 
@@ -62,6 +60,7 @@ const onNumberClick = (number, currentStatus) => {
     setCandidateNums([])
     setStars(utils.randomSumIn(availableNums, 9))
   }
+
 }
 
   return (
